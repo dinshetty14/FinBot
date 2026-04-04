@@ -57,13 +57,13 @@
 | Component | Implementation |
 |---|---|
 | **Document Parsing** | Docling with `HierarchicalChunker` for structure-aware chunking |
-| **Embeddings** | `Qwen/Qwen3-Embedding-0.6B` via sentence-transformers |
+| **Embeddings** | `sentence-transformers/all-MiniLM-L6-v2` (Fast, CPU-friendly) |
 | **Vector Database** | Qdrant (Docker local) with RBAC metadata filtering |
 | **RBAC** | Enforced at vector DB query level — unauthorized chunks are never retrieved |
 | **Query Routing** | `semantic-router` with 7 routes (5 business + 2 guardrail) |
 | **Input Guardrails** | Off-topic detection, prompt injection, PII scrubbing, rate limiting |
 | **Output Guardrails** | Source citation enforcement, grounding check, cross-role leakage detection |
-| **LLM** | Groq (`openai/gpt-oss-20b`) |
+| **LLM** | Groq (`llama-3.1-8b-instant` or `llama-3.3-70b-versatile`) |
 | **Auth** | JWT tokens + bcrypt password hashing |
 | **Users** | SQLite with seeded demo accounts |
 | **Evaluation** | RAGAs with 5 metrics + ablation study |
@@ -140,14 +140,13 @@ cd FinBot
 # Copy environment template
 cp .env.example .env
 
-# Edit .env and set your GROQ_API_KEY
+# Edit .env and set your GROQ_API_KEY. 
+# The application is pre-configured to use a FAST local mode for Qdrant.
 ```
 
-### 2. Start Qdrant
-
-```bash
+# Qdrant is pre-configured for "local" mode in .env, so Docker is optional
+# but recommended for production-grade testing:
 docker-compose up -d
-```
 
 ### 3. Backend Setup
 
