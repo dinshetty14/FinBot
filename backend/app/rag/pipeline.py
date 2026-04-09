@@ -177,6 +177,13 @@ def generate_response(
         )
 
     context = "\n\n---\n\n".join(context_parts) if context_parts else "No relevant documents found."
+    
+    # TRUNCATION SAFEGUARD: Limit context to stay beneath Groq's TPM (6000) and context window limits.
+    # 15000 characters is approximately 3500-4000 tokens, leaving enough room for output and query.
+    MAX_CONTEXT_CHARS = 15000
+    if len(context) > MAX_CONTEXT_CHARS:
+        logger.warning(f"Truncating context from length {len(context)} to {MAX_CONTEXT_CHARS}")
+        context = context[:MAX_CONTEXT_CHARS] + "\n\n[... Context truncated due to length limitations ...]"
 
     # Format system prompt
     system = SYSTEM_PROMPT.format(
